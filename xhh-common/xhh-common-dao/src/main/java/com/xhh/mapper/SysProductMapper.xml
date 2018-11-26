@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhh.mapper.SysProductMapper" >
+  <resultMap id="BaseResultMap" type="com.xhh.pojo.SysProduct" >
+    <id column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="product_model" property="productModel" jdbcType="VARCHAR" />
+    <result column="product_stock" property="productStock" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_cat_id" property="productCatId" jdbcType="INTEGER" />
+    <result column="product_cost_price" property="productCostPrice" jdbcType="DECIMAL" />
+    <result column="product_suggested_price" property="productSuggestedPrice" jdbcType="DECIMAL" />
+    <result column="product_dep_team" property="productDepTeam" jdbcType="VARCHAR" />
+    <result column="product_dep_time" property="productDepTime" jdbcType="TIMESTAMP" />
+    <result column="product_memo" property="productMemo" jdbcType="VARCHAR" />
+    <result column="admin_user_id" property="adminUserId" jdbcType="INTEGER" />
+    <result column="product_creat_time" property="productCreatTime" jdbcType="TIMESTAMP" />
+    <result column="product_status" property="productStatus" jdbcType="INTEGER" />
+    <result column="product_main_image_path" property="productMainImagePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    product_id, product_model, product_stock, product_name, product_cat_id, product_cost_price, 
+    product_suggested_price, product_dep_team, product_dep_time, product_memo, admin_user_id, 
+    product_creat_time, product_status, product_main_image_path
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xhh.pojo.SysProductExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.xhh.pojo.SysProductExample" >
+    delete from sys_product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.xhh.pojo.SysProduct" >
+    insert into sys_product (product_id, product_model, product_stock, 
+      product_name, product_cat_id, product_cost_price, 
+      product_suggested_price, product_dep_team, 
+      product_dep_time, product_memo, admin_user_id, 
+      product_creat_time, product_status, product_main_image_path
+      )
+    values (#{productId,jdbcType=INTEGER}, #{productModel,jdbcType=VARCHAR}, #{productStock,jdbcType=INTEGER}, 
+      #{productName,jdbcType=VARCHAR}, #{productCatId,jdbcType=INTEGER}, #{productCostPrice,jdbcType=DECIMAL}, 
+      #{productSuggestedPrice,jdbcType=DECIMAL}, #{productDepTeam,jdbcType=VARCHAR}, 
+      #{productDepTime,jdbcType=TIMESTAMP}, #{productMemo,jdbcType=VARCHAR}, #{adminUserId,jdbcType=INTEGER}, 
+      #{productCreatTime,jdbcType=TIMESTAMP}, #{productStatus,jdbcType=INTEGER}, #{productMainImagePath,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xhh.pojo.SysProduct" >
+    insert into sys_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="productModel != null" >
+        product_model,
+      </if>
+      <if test="productStock != null" >
+        product_stock,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="productCatId != null" >
+        product_cat_id,
+      </if>
+      <if test="productCostPrice != null" >
+        product_cost_price,
+      </if>
+      <if test="productSuggestedPrice != null" >
+        product_suggested_price,
+      </if>
+      <if test="productDepTeam != null" >
+        product_dep_team,
+      </if>
+      <if test="productDepTime != null" >
+        product_dep_time,
+      </if>
+      <if test="productMemo != null" >
+        product_memo,
+      </if>
+      <if test="adminUserId != null" >
+        admin_user_id,
+      </if>
+      <if test="productCreatTime != null" >
+        product_creat_time,
+      </if>
+      <if test="productStatus != null" >
+        product_status,
+      </if>
+      <if test="productMainImagePath != null" >
+        product_main_image_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="productModel != null" >
+        #{productModel,jdbcType=VARCHAR},
+      </if>
+      <if test="productStock != null" >
+        #{productStock,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productCatId != null" >
+        #{productCatId,jdbcType=INTEGER},
+      </if>
+      <if test="productCostPrice != null" >
+        #{productCostPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="productSuggestedPrice != null" >
+        #{productSuggestedPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="productDepTeam != null" >
+        #{productDepTeam,jdbcType=VARCHAR},
+      </if>
+      <if test="productDepTime != null" >
+        #{productDepTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productMemo != null" >
+        #{productMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="adminUserId != null" >
+        #{adminUserId,jdbcType=INTEGER},
+      </if>
+      <if test="productCreatTime != null" >
+        #{productCreatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productStatus != null" >
+        #{productStatus,jdbcType=INTEGER},
+      </if>
+      <if test="productMainImagePath != null" >
+        #{productMainImagePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.xhh.pojo.SysProductExample" resultType="java.lang.Integer" >
+    select count(*) from sys_product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_product
+    <set >
+      <if test="record.productId != null" >
+        product_id = #{record.productId,jdbcType=INTEGER},
+      </if>
+      <if test="record.productModel != null" >
+        product_model = #{record.productModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productStock != null" >
+        product_stock = #{record.productStock,jdbcType=INTEGER},
+      </if>
+      <if test="record.productName != null" >
+        product_name = #{record.productName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productCatId != null" >
+        product_cat_id = #{record.productCatId,jdbcType=INTEGER},
+      </if>
+      <if test="record.productCostPrice != null" >
+        product_cost_price = #{record.productCostPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.productSuggestedPrice != null" >
+        product_suggested_price = #{record.productSuggestedPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.productDepTeam != null" >
+        product_dep_team = #{record.productDepTeam,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productDepTime != null" >
+        product_dep_time = #{record.productDepTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.productMemo != null" >
+        product_memo = #{record.productMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adminUserId != null" >
+        admin_user_id = #{record.adminUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.productCreatTime != null" >
+        product_creat_time = #{record.productCreatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.productStatus != null" >
+        product_status = #{record.productStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.productMainImagePath != null" >
+        product_main_image_path = #{record.productMainImagePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_product
+    set product_id = #{record.productId,jdbcType=INTEGER},
+      product_model = #{record.productModel,jdbcType=VARCHAR},
+      product_stock = #{record.productStock,jdbcType=INTEGER},
+      product_name = #{record.productName,jdbcType=VARCHAR},
+      product_cat_id = #{record.productCatId,jdbcType=INTEGER},
+      product_cost_price = #{record.productCostPrice,jdbcType=DECIMAL},
+      product_suggested_price = #{record.productSuggestedPrice,jdbcType=DECIMAL},
+      product_dep_team = #{record.productDepTeam,jdbcType=VARCHAR},
+      product_dep_time = #{record.productDepTime,jdbcType=TIMESTAMP},
+      product_memo = #{record.productMemo,jdbcType=VARCHAR},
+      admin_user_id = #{record.adminUserId,jdbcType=INTEGER},
+      product_creat_time = #{record.productCreatTime,jdbcType=TIMESTAMP},
+      product_status = #{record.productStatus,jdbcType=INTEGER},
+      product_main_image_path = #{record.productMainImagePath,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xhh.pojo.SysProduct" >
+    update sys_product
+    <set >
+      <if test="productModel != null" >
+        product_model = #{productModel,jdbcType=VARCHAR},
+      </if>
+      <if test="productStock != null" >
+        product_stock = #{productStock,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productCatId != null" >
+        product_cat_id = #{productCatId,jdbcType=INTEGER},
+      </if>
+      <if test="productCostPrice != null" >
+        product_cost_price = #{productCostPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="productSuggestedPrice != null" >
+        product_suggested_price = #{productSuggestedPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="productDepTeam != null" >
+        product_dep_team = #{productDepTeam,jdbcType=VARCHAR},
+      </if>
+      <if test="productDepTime != null" >
+        product_dep_time = #{productDepTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productMemo != null" >
+        product_memo = #{productMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="adminUserId != null" >
+        admin_user_id = #{adminUserId,jdbcType=INTEGER},
+      </if>
+      <if test="productCreatTime != null" >
+        product_creat_time = #{productCreatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productStatus != null" >
+        product_status = #{productStatus,jdbcType=INTEGER},
+      </if>
+      <if test="productMainImagePath != null" >
+        product_main_image_path = #{productMainImagePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xhh.pojo.SysProduct" >
+    update sys_product
+    set product_model = #{productModel,jdbcType=VARCHAR},
+      product_stock = #{productStock,jdbcType=INTEGER},
+      product_name = #{productName,jdbcType=VARCHAR},
+      product_cat_id = #{productCatId,jdbcType=INTEGER},
+      product_cost_price = #{productCostPrice,jdbcType=DECIMAL},
+      product_suggested_price = #{productSuggestedPrice,jdbcType=DECIMAL},
+      product_dep_team = #{productDepTeam,jdbcType=VARCHAR},
+      product_dep_time = #{productDepTime,jdbcType=TIMESTAMP},
+      product_memo = #{productMemo,jdbcType=VARCHAR},
+      admin_user_id = #{adminUserId,jdbcType=INTEGER},
+      product_creat_time = #{productCreatTime,jdbcType=TIMESTAMP},
+      product_status = #{productStatus,jdbcType=INTEGER},
+      product_main_image_path = #{productMainImagePath,jdbcType=VARCHAR}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+</mapper>
