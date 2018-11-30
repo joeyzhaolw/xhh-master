@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xhh.mapper.SysDataDictionaryMapper" >
   <resultMap id="BaseResultMap" type="com.xhh.pojo.SysDataDictionary" >
     <id column="dictionary_id" property="dictionaryId" jdbcType="INTEGER" />
@@ -14,99 +16,28 @@
     <result column="dictionary_id_path" property="dictionaryIdPath" jdbcType="VARCHAR" />
     <result column="allow_edit" property="allowEdit" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    dictionary_id, dictionary_catalog, dictionary_level, dictionary_name, dictionary_key, 
-    dictionary_value, dictionary_memo, dictionary_is_use, parent_dictionary_id, dictionary_id_path, 
-    allow_edit
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.xhh.pojo.SysDataDictionaryExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from sys_data_dictionary
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
+  <!--查询字典信息-->
+  <select id="findAllDictionary" resultMap="BaseResultMap">
+       select dictionary_id,dictionary_catalog,dictionary_level,dictionary_name,dictionary_key,dictionary_value,dictionary_memo,dictionary_is_use,parent_dictionary_id,
+           dictionary_id_path,allow_edit from sys_data_dictionary
+       <where>
+            <if test="dictionary_catalog != null and dictionary_catalog != ''">
+              and dictionary_catalog = #{dictionaryCatalog}
+            </if>
+            <if test="dictionary_value != null and dictionary_value != ''">
+              and dictionary_value = #{dictionaryValue}
+            </if>
+       </where>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from sys_data_dictionary
-    where dictionary_id = #{dictionaryId,jdbcType=INTEGER}
-  </select>
+
+  <!--删除字典信息-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from sys_data_dictionary
     where dictionary_id = #{dictionaryId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.xhh.pojo.SysDataDictionaryExample" >
-    delete from sys_data_dictionary
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
+
+
+  <!--增加字典信息-->
   <insert id="insert" parameterType="com.xhh.pojo.SysDataDictionary" >
     insert into sys_data_dictionary (dictionary_id, dictionary_catalog, 
       dictionary_level, dictionary_name, dictionary_key, 
@@ -192,70 +123,9 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.xhh.pojo.SysDataDictionaryExample" resultType="java.lang.Integer" >
-    select count(*) from sys_data_dictionary
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update sys_data_dictionary
-    <set >
-      <if test="record.dictionaryId != null" >
-        dictionary_id = #{record.dictionaryId,jdbcType=INTEGER},
-      </if>
-      <if test="record.dictionaryCatalog != null" >
-        dictionary_catalog = #{record.dictionaryCatalog,jdbcType=VARCHAR},
-      </if>
-      <if test="record.dictionaryLevel != null" >
-        dictionary_level = #{record.dictionaryLevel,jdbcType=INTEGER},
-      </if>
-      <if test="record.dictionaryName != null" >
-        dictionary_name = #{record.dictionaryName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.dictionaryKey != null" >
-        dictionary_key = #{record.dictionaryKey,jdbcType=INTEGER},
-      </if>
-      <if test="record.dictionaryValue != null" >
-        dictionary_value = #{record.dictionaryValue,jdbcType=VARCHAR},
-      </if>
-      <if test="record.dictionaryMemo != null" >
-        dictionary_memo = #{record.dictionaryMemo,jdbcType=VARCHAR},
-      </if>
-      <if test="record.dictionaryIsUse != null" >
-        dictionary_is_use = #{record.dictionaryIsUse,jdbcType=INTEGER},
-      </if>
-      <if test="record.parentDictionaryId != null" >
-        parent_dictionary_id = #{record.parentDictionaryId,jdbcType=INTEGER},
-      </if>
-      <if test="record.dictionaryIdPath != null" >
-        dictionary_id_path = #{record.dictionaryIdPath,jdbcType=VARCHAR},
-      </if>
-      <if test="record.allowEdit != null" >
-        allow_edit = #{record.allowEdit,jdbcType=INTEGER},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update sys_data_dictionary
-    set dictionary_id = #{record.dictionaryId,jdbcType=INTEGER},
-      dictionary_catalog = #{record.dictionaryCatalog,jdbcType=VARCHAR},
-      dictionary_level = #{record.dictionaryLevel,jdbcType=INTEGER},
-      dictionary_name = #{record.dictionaryName,jdbcType=VARCHAR},
-      dictionary_key = #{record.dictionaryKey,jdbcType=INTEGER},
-      dictionary_value = #{record.dictionaryValue,jdbcType=VARCHAR},
-      dictionary_memo = #{record.dictionaryMemo,jdbcType=VARCHAR},
-      dictionary_is_use = #{record.dictionaryIsUse,jdbcType=INTEGER},
-      parent_dictionary_id = #{record.parentDictionaryId,jdbcType=INTEGER},
-      dictionary_id_path = #{record.dictionaryIdPath,jdbcType=VARCHAR},
-      allow_edit = #{record.allowEdit,jdbcType=INTEGER}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
+
+
+  <!--修改字典信息-->
   <update id="updateByPrimaryKeySelective" parameterType="com.xhh.pojo.SysDataDictionary" >
     update sys_data_dictionary
     <set >

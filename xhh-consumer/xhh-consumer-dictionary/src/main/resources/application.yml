@@ -1,0 +1,34 @@
+server:
+  port: 8094
+
+spring:
+  application:
+    name: xhh-consumer-dictionary
+
+  datasource:
+    username: root
+    password: mysql910416
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.0.200:3306/dev
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: LEGACYHTML5
+    encoding: UTF-8
+    cache: false
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8090/eureka/
+
+
+#分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  pageSizeZero: true
+  params: count=countSql

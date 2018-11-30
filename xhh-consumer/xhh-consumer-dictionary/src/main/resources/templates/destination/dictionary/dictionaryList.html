@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" >
+<head>
+  <meta charset="utf-8">
+  <title>用户列表</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="/layui/css/layui.css" media="all"/>
+  <script src="/layui/layui.all.js"></script>
+  <script src="/layui/jquery-1.11.1.min.js"></script>
+  
+  <style type="text/css">
+  body .demo-class .layui-layer-title{background:#c00; color:#fff; border: none;}
+  body .demo-class .layui-layer-btn{border-top:1px solid #E9E7E7}
+  body .demo-class .layui-layer-btn a{background:#333;}
+  body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999;}
+  </style>
+</head>
+
+<body>
+<div>
+    <input  type="text" placeholder="请输入字典目录" autocomplete="off"   class="layui-btn layui-btn-primary layui-btn-radius" id="name_dictionary" />
+    <input  type="text" placeholder="请输入字典value" autocomplete="off"   class="layui-btn layui-btn-primary layui-btn-radius" id="value_dictionary" />
+    <select name="dictionaryCatalog" lay-filter="catalog">
+
+        <option value="0">写作</option>
+        <option value="1">阅读</option>
+    </select>
+    <button class="layui-btn   layui-btn-warm layui-btn-primary layui-btn-radius" id="student_query">查询</button>
+
+    <button class="layui-btn   layui-btn-warm layui-btn-primary layui-btn-radius" id="dictionary_add">新增字典</button>
+</div>
+<!-- 添加日期选择器 -->
+<!--<script >
+layui.use('laydate', function(){
+	  var laydate = layui.laydate;
+
+	  //执行一个laydate实例
+	  laydate.render({
+	    elem: '#startJoinTime_condition'  //指定元素
+	  });
+	  laydate.render({
+		elem: '#endJoinTime_condition'  //指定元素
+	  });
+
+	});
+</script>-->
+<table id="t_dictionaryList" lay-filter ="test"  ></table>
+ <script >
+layui.use('table', function(){
+		
+	  var table = layui.table;
+	  var arr=[ //表头
+	       {field: 'dictionaryId', title: '字典主键', sort: true, fixed: 'left'}
+	      ,{field: 'dictionaryCatalog', title: '数据字典目录', sort: true}
+	      ,{field: 'dictionaryLevel', title: '字典版本', sort: true}
+	      ,{field: 'dictionaryName', title: '字典名称'}
+	      ,{field: 'dictionaryKey', title: '数据字典key'}
+	      ,{field: 'dictionaryValue', title: '数据字典value', sort: true}
+	      ,{field: 'dictionaryMemo', title: '字典说明'}
+	      ,{field: 'dictionaryIsUse', title: '是否利用',templet:"#isOnUse"}
+	      ,{field: 'parentDictionaryId', title: '父字典ID', sort: true}
+          ,{field: 'dictionaryIdPath', title: '字典存放路径'}
+          ,{field: 'allowEdit', title: '是否允许编辑'}
+	      ,{fixed: 'right', title: '操作',width:150, align:'center', toolbar: '#barDemo'}
+	    ];
+	  
+	  
+	  //第一个实例
+	 var tableIns = table.render({
+	    elem: '#t_dictionaryList'
+	    ,url: '/xhh/dictionary' //数据接口
+	    ,page: true //开启分页
+	    ,cols: [ //表头
+	     arr
+	    ]
+	    /* ,initSort: {
+	        field: 'joinTime' //排序字段，对应 cols 设定的各字段名
+	        ,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+	      }  */
+	    
+	  });
+	
+	 $('#student_query').click(function(){
+			console.log(222);
+			tableIns.reload({
+				  where: { //设定异步数据接口的额外参数，任意设
+					  employeeName:$('#name_dictionary').val(),
+					  employeeCode:$('#value_dictionary').val(),
+				    //…
+				  }
+				  ,page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
+				});
+			
+		});
+	  
+	 window.Search=function(){
+			//执行重载--通过查询条件
+		 tableIns.reload({
+			  where: { //设定异步数据接口的额外参数，任意设
+				  employeeName:$('#name_dictionary').val(),
+				  employeeCode:$('#value_dictionary').val(),
+			    //…
+			  }
+			  ,page: {
+			    curr: 1 //重新从第 1 页开始
+			  }
+			});
+		}  
+	 
+//监听工具条
+table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+  //console.log(111);
+  var data = obj.data; //获得当前行数据
+  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+  var tr = obj.tr; //获得当前行 tr 的DOM对象
+ 
+  if(layEvent === 'detail'){ //查看
+    //do somehing
+	//location.href="/stu/createPage?id="+data.id+"&page=detail";
+	  tanchu(data);
+    
+  } else if(layEvent === 'del'){ //删除
+    layer.confirm('真的删除行么', function(index){
+      obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+      layer.close(index);
+      //向服务端发送删除指令
+      location.href="/sysUser/delete?id="+data.sysUserID;
+    });
+  } else if(layEvent === 'edit'){ //编辑
+    //do something
+    edits(data);
+    
+    //同步更新缓存对应的值
+    obj.update({
+      username: '123'
+      ,title: 'xxx'
+    });
+  }
+});
+
+
+});
+$('#sysUser_add').click(function(){
+	layui.use('layer', function(){		
+		 var layer = layui.layer;
+		 var index = parent.layer.getFrameIndex(window.name);
+		 layer.config({
+			   skin: 'demo-class',
+			   
+			   //offset: 'rt'
+			 });
+		 layer.open({
+			   type: 2,
+			   content: '/sysUser/sysUserDetail', //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+			   area: ['900px', '500px'],	   
+			   end: function () {
+					Search();
+		        } 
+		 }); 
+		  
+	});
+	
+});
+
+
+
+function tanchu(data){
+	
+	layui.use('layer', function(){
+		
+		 console.log(data);
+		 var layer = layui.layer;
+		 var index = parent.layer.getFrameIndex(window.name);
+		 layer.config({
+			   skin: 'demo-class',
+			   
+			  
+			   //offset: 'rt'
+			 });
+		 layer.open({
+			   type: 2,
+			   content: '/sysUser/sysUserDetail?id='+data.sysUserID+'&page=detail', //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+			   area: ['900px', '500px'],	   
+			   btn: ['确定'],
+			   yes: function(index, layero){
+				    //按钮【按钮一】的回调
+				   parent.layer.close(index);
+				  }
+		 }); 
+		  
+	});
+}
+
+function edits(data){
+	
+	layui.use('layer', function(){
+		
+		 console.log(data);
+		 var layer = layui.layer;
+		 var index = parent.layer.getFrameIndex(window.name);
+		 layer.config({
+			   skin: 'demo-class',
+			   //offset: 'rt'
+			 });
+		 var index=layer.open({
+			   type: 2,
+			   content: '/sysUser/sysUserDetail?id='+data.sysUserID+'&page=edit', //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+			   area: ['900px', '500px'],
+			   end: function () {
+					Search();
+		        } 
+		 }); 
+		 //layer.full(index);  
+	});
+}
+
+</script>
+<script type="text/html" id="barDemo"  >
+  <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+  
+  <!-- 这里同样支持 laytpl 语法，如： -->
+  {{#  if(d.auth > 2){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
+  {{#  } }}
+</script>
+
+<script type="text/html" id="isOnUse">
+    {{#console.log(d.isOnUse) }}
+    {{#  if(d.isOnUse =='0'){ }}
+        未使用
+    {{#  } else { }}
+        已使用
+    {{#  } }}
+</script>
+</body>
+</html>

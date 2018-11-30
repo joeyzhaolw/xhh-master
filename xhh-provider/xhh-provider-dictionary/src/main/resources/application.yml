@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: xhh-provider-dictionary
+
+  datasource:
+    username: root
+    password: mysql910416
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.0.200:3306/dev?useSSL=false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8090/eureka/    #服务端配置安全机制后,客户端启动需加上用户名和密码
+
+server:
+  port: 8091
